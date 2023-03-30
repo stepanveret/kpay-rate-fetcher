@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exchange Rate Dashboard</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .rate-text {
+      font-size: 48px;
+      margin: 20px 0;
+    }
+
+    .image-container {
+      width: 300px;
+      height: 300px;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: auto;
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+      height: 50vh;
+    }
+  </style>
+</head>
+<body>
+  <div class="rate-text">GEL/RUB rate is: <span id="rate-value">N/A</span></div>
+  <div class="image-container">
+    <img id="rate-image" src="" alt="Rate change image" />
+  </div>
+  <iframe id="grafana-panel" src="" ></iframe>
+
+  <script>
+    const grafanaPanelUrl = "http://localhost:3000/d/z1GpLQf4z/kpay1?orgId=2&refresh=5m&kiosk";
+    document.getElementById("grafana-panel").src = grafanaPanelUrl;
+
+    async function fetchData() {
+      const response = await fetch("http://localhost:5000/api/rate");
+      const data = await response.json();
+      return data;
+    }
+
+    async function updateRate() {
+      try {
+        const data = await fetchData();
+        document.getElementById("rate-value").textContent = data.rate.toFixed(2);
+        document.getElementById("rate-image").src = data.increased ? "/images/stonks.png" : "/images/doge.png";
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    setInterval(updateRate, 5000);
+    updateRate();
+  </script>
+</body>
+</html>
