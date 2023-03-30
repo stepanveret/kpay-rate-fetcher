@@ -6,11 +6,11 @@ services:
       - ./data:/app/data
 
   influxdb:
-    image: influxdb:2.1.1
+    image: arm32v7/influxdb:1.8.10
     ports:
       - "8086:8086"
     volumes:
-      - influxdb-data:/var/lib/influxdb2
+      - influxdb-data:/var/lib/influxdb
     environment:
       - INFLUXDB_DB=mydb
       - INFLUXDB_USER=user
@@ -28,6 +28,7 @@ services:
       - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
+      - ./custom.ini:/etc/grafana/grafana.ini
     depends_on:
       - influxdb
 
