@@ -6,12 +6,11 @@ services:
       - ./data:/app/data
 
   influxdb:
-    image: influxdb:2.0
+    image: arm32v7/influxdb:1.8.10
     ports:
       - "8086:8086"
     volumes:
-      - influxdb-data:/var/lib/influxdb2
-      - ./influxdb_data:/data
+      - influxdb-data:/var/lib/influxdb
     environment:
       - INFLUXDB_DB=mydb
       - INFLUXDB_USER=user
